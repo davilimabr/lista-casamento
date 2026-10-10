@@ -19,6 +19,10 @@ window.CASAMENTO = {
     mapa: "https://www.google.com/maps/place/Bistr%C3%B4+do+Mato/@-22.947253,-43.577275,1045m/data=!3m2!1e3!4b1!4m6!3m5!1s0x9be5904ca5ffcd:0x9934a8cf79267b8b!8m2!3d-22.947253!4d-43.577275!16s%2Fg%2F11qbrrr4kd?entry=ttu&g_ep=EgoyMDI2MTAwNy4wIKXMDSoASAFQAw%3D%3D"
   },
 
+  // Anotações "à mão" sobre as fotos (deixe "" para esconder)
+  legendaHero: "a gente vai casar!",
+  legendaFinal: "um brinde ao que vem aí",
+
   traje: "Esporte fino. Venha chique e confortável! ;)",
 
   // RSVP via WhatsApp: número com DDI + DDD, só dígitos
@@ -35,17 +39,20 @@ window.CASAMENTO = {
     {
       titulo: "Como nos conhecemos",
       texto: "De um rolé cultural pelo Centro, com direito a visita no museu e café ao pôr do sol, floreceu uma cumplicidade que se fortaleceu com o tempo.",
-      foto: "fotos/historia-1.jpg"
+      foto: "fotos/historia-1.jpg",
+      legenda: "rolé cultural no Centro"
     },
     {
       titulo: "A vida a dois",
       texto: "Entre trilhas, praias, viagens e muitos fins de semana maratonando séries em casa, fomos descobrindo que tudo fica melhor junto.",
-      foto: "fotos/historia-2.jpg"
+      foto: "fotos/historia-2.jpg",
+      legenda: "sol, mar e a gente"
     },
     {
       titulo: "O pedido",
       texto: "Quando o peito não segurava mais o sentimento, veio o pedido. Um lugar especial, uma noite especial e memórias que ficarão para sempre.",
-      foto: "fotos/historia-3.jpg"
+      foto: "fotos/historia-3.jpg",
+      legenda: "o dia do pedido"
     }
   ],
 

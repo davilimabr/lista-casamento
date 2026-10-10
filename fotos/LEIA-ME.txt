@@ -1,0 +1,10 @@
+Coloque as fotos nesta pasta com estes nomes (JPG):
+
+  hero.jpg         -> foto principal do topo (vertical, proporção 4:5)
+  historia-1.jpg   -> capítulo 01 (vertical, 4:5)
+  historia-2.jpg   -> capítulo 02 (vertical, 4:5)
+  historia-3.jpg   -> capítulo 03 (vertical, 4:5)
+  final.jpg        -> foto larga antes do RSVP (horizontal, paisagem)
+
+Enquanto a foto não existir, o site mostra um espaço reservado com o nome do arquivo.
+Dica: exporte com ~2000px no lado maior e qualidade 80% para o site carregar rápido.

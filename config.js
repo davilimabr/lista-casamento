@@ -80,6 +80,16 @@ window.CASAMENTO = {
 
     { nome: "Micro-ondas", desc: "", valor: 550, link: "https://www.amazon.com.br/Micro-ondas-Bancada-Electrolux-Efficient-ME23S/dp/B0B8P3T3VM/ref=asc_df_B0B8P3T3VM?mcid=1afd954c0e6d3fc49a1901a58f8aed01&hvadid=709864975911&hvpos=&hvnetw=g&hvrand=14915989133397014792&hvpone=&hvptwo=&hvqmt=&hvdev=c&hvdvcmdl=&hvlocint=&hvlocphy=9100840&hvtargid=pla-1930383194608&hvocijid=14915989133397014792-B0B8P3T3VM-&hvexpln=0&language=pt_BR"},
 
-    { nome: "Sofá cama", desc: "", valor: 4700, link: "https://www.atelierclassico.com.br/sofa-kyzara?utm_term=&utm_campaign=&hsa_kw=&hsa_mt=", destaque: true }
+    { nome: "Sofá cama", desc: "", valor: 4700, link: "https://www.madeiramadeira.com.br/sofa-cama-modular-3-lugares-organico-210cm-base-madeira-macica-cancun-502169359.html?index=search-web&seller=1", destaque: true },
+    { nome: "Jogo de Xícaras", desc: "", valor: 234, link: "https://www.westwing.com.br/p/jogo-de-xicaras-para-cha-bio-raio-geometrico/PO719CP78PORWW-1955259.html" },
+    { nome: "Rack sala", desc: "", valor: 980, link: "https://www.madeiramadeira.com.br/rack-retro-para-tv-ate-85-polegadas-100-mdf-220cm-2-gavetas-marrom-pinhao-140636318.html?origem=pla-140636318&utm_term=", destaque: true },
+    { nome: "Mesa de jantar", desc: "", valor: 2050, link: "https://www.madeiramadeira.com.br/conjunto-mesa-de-jantar-redonda-4-cadeiras-estofadas-encosto-tela-100-mdf-pinhao-bege-rustico-dal-398058436.html?index=search-web&seller=21322", destaque: true },
+    { nome: "Tapete sala", desc: "", valor: 450, link: "https://www.madeiramadeira.com.br/tapete-sala-escritorio-sisal-antiderrapante-2-50-x-2-00-s478-2521118.html",  },
+    { nome: "Luminária Pendente de Banbu", desc: "", valor: 550, link: "https://casainno.com.br/products/luminaria-pendente-bambu-luz-do-campo?currency=BRL&country=BR&variant=48087233560809&stkn=e20611bca2b0", },
+    // { nome: "Sofá cama", desc: "", valor: 4700, link: "", destaque: true },
+    // { nome: "Sofá cama", desc: "", valor: 4700, link: "", destaque: true },
+    // { nome: "Sofá cama", desc: "", valor: 4700, link: "", destaque: true },
+    // { nome: "Sofá cama", desc: "", valor: 4700, link: "", destaque: true },
+    // { nome: "Sofá cama", desc: "", valor: 4700, link: "", destaque: true },
   ]
 };

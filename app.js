@@ -14,11 +14,28 @@
   C.iniciais = `${C.ele[0]}&${C.ela[0]}`;
   C.dataCurta = `${pad(data.getDate())}.${pad(data.getMonth() + 1)}.${data.getFullYear()}`;
   C.hora = `${pad(data.getHours())}h${pad(data.getMinutes())}`;
-  document.title = `${C.ele} & ${C.ela} · ${C.dataCurta}`;
+  C.nomes = `${C.ele} & ${C.ela}`;
+  document.title = `${C.nomes} · ${C.dataCurta}`;
 
   const get = (path) => path.split(".").reduce((o, k) => (o ? o[k] : ""), C);
-  $$("[data-c]").forEach((el) => (el.textContent = get(el.dataset.c)));
+  $$("[data-c]").forEach((el) => {
+    el.textContent = get(el.dataset.c) || "";
+    if (!el.textContent && el.matches("figcaption")) el.hidden = true;
+  });
   $("#mapLink").href = C.local.mapa;
+
+  // selo giratório do hero
+  $("#sealText").textContent = `${C.nomes} · ${C.dataCurta} · Rio de Janeiro · `.toUpperCase();
+
+  // mini-sol: um horizonte com o sol na altura de um horário (põe-se ~18h)
+  const miniSun = (t, cls = "") => {
+    const y = 30 - t * 22;
+    return `<svg class="minisun ${cls}" viewBox="0 0 64 36" aria-hidden="true" style="--t:${t.toFixed(2)}">
+      <clipPath id="ms${(t * 100) | 0}"><rect width="64" height="30"/></clipPath>
+      <circle cx="32" cy="${y.toFixed(1)}" r="9" clip-path="url(#ms${(t * 100) | 0})"/>
+      <line x1="6" y1="30.5" x2="58" y2="30.5"/><line x1="16" y1="34.5" x2="48" y2="34.5"/>
+    </svg>`;
+  };
 
   // nomes do hero letra por letra (para a animação de entrada)
   let i = 0;
@@ -34,11 +51,14 @@
     .map(
       (h, n) => `
       <article class="chapter reveal">
-        <figure class="ph chapter__photo" data-label="${esc(h.foto)}">
-          <img src="${esc(h.foto)}" alt="${esc(h.titulo)}" loading="lazy" onerror="this.remove()">
+        <figure class="print chapter__print">
+          <div class="ph print__img" data-label="${esc(h.foto)}">
+            <img src="${esc(h.foto)}" alt="${esc(h.titulo)}" loading="lazy" onerror="this.remove()">
+          </div>
+          ${h.legenda ? `<figcaption class="print__cap">${esc(h.legenda)}</figcaption>` : ""}
         </figure>
         <div class="chapter__text">
-          <p class="chapter__num">${pad(n + 1)}</p>
+          <p class="chapter__num" aria-hidden="true">${pad(n + 1)}</p>
           <h3>${esc(h.titulo)}</h3>
           <p>${esc(h.texto)}</p>
         </div>
@@ -47,11 +67,17 @@
     .join("");
 
   /* ---------- programação ---------- */
+  // o sol vai baixando ao longo da programação
+  const sunAt = (hora) => {
+    const [hh, mm] = hora.split(":").map(Number);
+    return Math.min(1, Math.max(0.06, (18 - (hh + (mm || 0) / 60)) / 3));
+  };
   $("#schedule").innerHTML = C.programacao
     .map(
       (p) => `
       <li class="day__row reveal">
         <span class="day__time">${esc(p.hora)}</span>
+        ${miniSun(sunAt(p.hora), "day__sun")}
         <span class="day__title">${esc(p.titulo)}</span>
         <span class="day__desc">${esc(p.texto)}</span>
       </li>`
@@ -60,31 +86,53 @@
 
   /* ---------- presentes: sem link = Pix, com link = loja ---------- */
   // Pix abre o modal com a chave; loja leva direto para o site do produto
-  const giftCard = (g, n, i) => {
-    const abre = g.link
-      ? `<a class="gift__card" href="${esc(g.link)}" target="_blank" rel="noopener">`
-      : `<button class="gift__card" type="button" data-gift="${i}">`;
-    return `
-      <li class="gift${g.destaque ? " gift--destaque" : ""} reveal">
-        ${abre}
-          <span class="gift__tag">${pad(n + 1)}</span>
-          <span>
-            <span class="gift__name">${esc(g.nome)}</span>
-            <span class="gift__desc">${esc(g.desc)}</span>
+  // inclinação "de mão": determinística por posição, para não pular a cada visita
+  const tilt = (n) => [-2.2, 1.6, -1, 2.4, -1.8, 0.8][n % 6];
+  const reais = (v) => brl(v).replace(/\s/g, " ");
+
+  // Pix = selo postal (o sol sobe conforme o valor)
+  const stamp = (g, n, i, total) => `
+      <li class="stamp-wrap${g.destaque ? " is-destaque" : ""} reveal" style="--tilt:${tilt(n)}deg">
+        <button class="stamp" type="button" data-gift="${i}">
+          <span class="stamp__inner">
+            <span class="stamp__top">
+              <span class="stamp__val">${reais(g.valor)}</span>
+              <span class="stamp__no">Nº ${pad(n + 1)}</span>
+            </span>
+            ${miniSun(total > 1 ? 0.15 + (0.8 * n) / (total - 1) : 0.6, "stamp__sun")}
+            <span class="stamp__name">${esc(g.nome)}</span>
+            ${g.desc ? `<span class="stamp__desc">${esc(g.desc)}</span>` : ""}
+            <span class="stamp__foot">Correio dos noivos · Pix</span>
           </span>
-          <span class="gift__foot">
-            <span class="gift__price">${brl(g.valor)}</span>
-            <span class="gift__go${g.link ? " gift__go--ext" : ""}">${g.link ? "Ir para a loja" : "Enviar Pix"}</span>
+          <span class="postmark" aria-hidden="true">
+            <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="44"/><circle cx="60" cy="60" r="34"/>
+              <path d="M-10 46 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 M-10 60 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0 M-10 74 q15 -8 30 0 t30 0 t30 0 t30 0 t30 0"/>
+              <text x="60" y="64" text-anchor="middle">ENVIAR PIX</text></svg>
           </span>
-        ${g.link ? "</a>" : "</button>"}
+        </button>
       </li>`;
-  };
+
+  // loja = etiqueta de preço pendurada
+  const tag = (g, n) => `
+      <li class="tag-wrap${g.destaque ? " is-destaque" : ""} reveal" style="--tilt:${tilt(n + 1) * 0.8}deg">
+        <a class="tag" href="${esc(g.link)}" target="_blank" rel="noopener">
+          <span class="tag__no">${pad(n + 1)}</span>
+          <span class="tag__name">${esc(g.nome)}</span>
+          ${g.desc ? `<span class="tag__desc">${esc(g.desc)}</span>` : ""}
+          <span class="tag__foot">
+            <span class="tag__price">${reais(g.valor)}</span>
+            <span class="tag__go">Ver na loja <span aria-hidden="true">↗</span></span>
+          </span>
+        </a>
+      </li>`;
+
   const comIndice = C.presentes.map((g, i) => ({ g, i }));
-  [["#giftsPix", "#groupPix", (g) => !g.link], ["#giftsStore", "#groupStore", (g) => !!g.link]].forEach(([list, group, filtro]) => {
-    const itens = comIndice.filter(({ g }) => filtro(g));
-    $(group).hidden = !itens.length;
-    $(list).innerHTML = itens.map(({ g, i }, n) => giftCard(g, n, i)).join("");
-  });
+  const pix = comIndice.filter(({ g }) => !g.link);
+  const loja = comIndice.filter(({ g }) => !!g.link);
+  $("#groupPix").hidden = !pix.length;
+  $("#groupStore").hidden = !loja.length;
+  $("#giftsPix").innerHTML = pix.map(({ g, i }, n) => stamp(g, n, i, pix.length)).join("");
+  $("#giftsStore").innerHTML = loja.map(({ g }, n) => tag(g, n)).join("");
 
   /* ---------- modal Pix ---------- */
   const modal = $("#giftModal");
@@ -94,8 +142,7 @@
     const btn = e.target.closest("[data-gift]");
     if (!btn) return;
     const id = btn.dataset.gift;
-    const card = btn.closest(".gift");
-    modal.style.setProperty("--rc", card ? getComputedStyle(card).getPropertyValue("--rc") : "var(--ouro)");
+    modal.style.setProperty("--rc", getComputedStyle(btn).getPropertyValue("--paper") || "var(--ouro)");
     const g = C.presentes[id];
     $("#modalTitle").textContent = g.nome;
     $("#modalValue").textContent = brl(g.valor);
@@ -161,6 +208,7 @@
     new IntersectionObserver(([en], obs) => {
       if (!en.isIntersecting) return;
       obs.disconnect();
+      $(".arc").classList.add("is-on");
       const t0 = performance.now(), dur = 2600;
       const step = (now) => {
         const k = Math.min(1, (now - t0) / dur);
